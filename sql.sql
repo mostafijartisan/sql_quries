@@ -9,8 +9,8 @@ CREATE DATABASE test;
 -- create users table
 CREATE TABLE users (
     id int NOT NULL PRIMARY KEY,
-    last_name varchar(255) NOT NULL,
-    first_name varchar(255),
+    first_name varchar(255) NOT NULL,
+    last_name varchar(255),
     age int
 );
 
@@ -49,11 +49,11 @@ CREATE TABLE order_histories (
 /* ***********************************/
 
 -- in users table
-INSERT INTO users (id, last_name, first_name, age) VALUES (1, 'Rahim', 'Hossain', '25');
-INSERT INTO users (id, last_name, first_name, age) VALUES (2, 'Karim', '', '20');
-INSERT INTO users (id, last_name, first_name, age) VALUES (3, 'Habib', '', '23');
-INSERT INTO users (id, last_name, first_name, age) VALUES (4, 'Asif', '', '23');
-INSERT INTO users (id, last_name, first_name, age) VALUES (5, 'Rizve', '', '21');
+INSERT INTO users (id, first_name, last_name, age) VALUES (1, 'Rahim', 'Hossain', '25');
+INSERT INTO users (id, first_name, last_name, age) VALUES (2, 'Karim', '', '20');
+INSERT INTO users (id, first_name, last_name, age) VALUES (3, 'Habib', '', '23');
+INSERT INTO users (id, first_name, last_name, age) VALUES (4, 'Asif', '', '23');
+INSERT INTO users (id, first_name, last_name, age) VALUES (5, 'Rizve', '', '21');
 
 -- in products table
 INSERT INTO products (id, name, price, qty) VALUES (1, 'wallet', '500', '10');
@@ -75,3 +75,59 @@ INSERT INTO order_histories (id, order_id, product_id, qty) VALUES (3, 3, 4, 3);
 / some queries Section 
 /* ***********************************/
 
+-- get all data from a table
+SELECT * FROM users;
+SELECT * FROM products;
+
+-- get specific data from a table
+SELECT last_name, age FROM users;
+SELECT name, qty FROM products;
+
+
+/* ***********************************
+/ joins Section 
+/* ***********************************/
+
+-- inner join
+SELECT orders.order_number, users.first_name, orders.order_date
+    FROM orders
+        INNER JOIN users ON orders.user_id = users.id;
+
+-- left join
+SELECT users.first_name, orders.order_number, orders.order_date
+    FROM users
+        LEFT JOIN orders ON users.id = orders.user_id;
+
+
+-- left join
+SELECT users.first_name, orders.order_number, orders.order_date
+    FROM users
+        RIGHT JOIN orders ON users.id = orders.user_id;
+
+/* ***********************************
+/ some aggregate function
+/* ***********************************/
+
+-- get total order count
+SELECT COUNT(id) FROM orders;
+
+-- get total order qty sum
+SELECT SUM(order_histories.qty) 
+    FROM orders
+        LEFT JOIN order_histories ON orders.id = order_histories.order_id;
+
+-- get total order price sum
+SELECT SUM(products.price) 
+    FROM orders
+        LEFT JOIN order_histories ON orders.id = order_histories.order_id
+        LEFT JOIN products ON order_histories.product_id = products.id;
+
+
+/* ***********************************
+/ ALTER section
+/* ***********************************/
+ALTER TABLE users ADD Email varchar(255);
+
+ALTER TABLE users DROP COLUMN Email;
+
+-- DROP DATABASE test;
